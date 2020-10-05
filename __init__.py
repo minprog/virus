@@ -4,8 +4,11 @@ import check50.internal
 import re
 import os
 import sys
-import matplotlib.pyplot as plt
 
+import matplotlib
+matplotlib.use('Agg')
+
+import matplotlib.pyplot as plt
 plt.show = lambda : print("Plots are disabled in check50")
 
 check50.internal.register.before_every(lambda : sys.path.append(os.getcwd()))
