@@ -197,7 +197,7 @@ def is_resistent_ATGCAATGCAATGGGCCCCTTTAAACCCT(test):
         raise check50.Failure(f"expected True but found {result}")
 
 
-@check50.check(simulate_avg)
+@check50.check(compiles)
 def simulate_medicine_length():
     """simulate() produces a list of the correct length"""
     virus = uva.check50.py.run("virus.py").module
