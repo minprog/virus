@@ -4,6 +4,7 @@ import check50.internal
 import re
 import os
 import sys
+import shutil
 
 import matplotlib
 matplotlib.use('Agg')
@@ -23,7 +24,13 @@ def exists():
 @check50.check(exists)
 def compiles():
     """virus.ipynb compiles."""
-    uva.check50.py.nbconvert("virus.ipynb", dest="virus.py")
+    uva.check50.py.nbconvert("virus.ipynb", dest="virus_conv.py")
+    
+    with open("virus_conv.py", "r") as converted_file, open("virus.py", "w") as virus_file:
+        for line in converted_file:
+            if line.strip() == "%matplotlib inline":
+                break
+            virus_file.write(line)
 
     uva.check50.py.compile("virus.py")
     module = uva.check50.py.run("virus.py").module
