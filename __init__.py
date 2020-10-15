@@ -28,9 +28,15 @@ def compiles():
     
     with open("virus_conv.py", "r") as converted_file, open("virus.py", "w") as virus_file:
         for line in converted_file:
-            if line.strip() == "%matplotlib inline":
+            # remove all lines after the plot boundary, because it exhausts matplotlib
+            if line.strip() == "%matplotlib inline" or line.strip() == "get_ipython().run_line_magic('matplotlib', 'inline')":
+                raise check50.Failure(line)
                 break
-            virus_file.write(line)
+            # replace assertions with no-ops
+            if line.strip().startswith("assert"):
+                virus_file.write("pass\n")
+            else:
+                virus_file.write(line)
 
     uva.check50.py.compile("virus.py")
     module = uva.check50.py.run("virus.py").module
@@ -74,10 +80,13 @@ def mutate_length():
     if not isinstance(virus.mutate("AAAA"), str):
         raise check50.Failure("expected mutate() to return a str")
 
-    for i in range(1, 10):
-        v = virus.generateVirus(i)
-        if not len(v) == len(virus.mutate(v)):
-            raise check50.Failure(f"expected mutate() to produce a virus of the same length as the parent")
+    try:
+        for i in range(1, 10):
+            v = virus.generateVirus(i)
+            if not len(v) == len(virus.mutate(v)):
+                raise check50.Failure(f"expected mutate() to produce a virus of the same length as the parent")
+    except ValueError:
+        raise check50.Failure("it seems that mutate gives an error, are you sure it works for viruses of length 1?")
 
 
 @check50.check(mutate_length)
