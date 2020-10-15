@@ -34,7 +34,7 @@ def compiles():
                 break
             # replace assertions with no-ops
             if line.strip().startswith("assert"):
-                virus_file.write("pass\n")
+                virus_file.write(line.replace("assert", "pass #"))
             else:
                 virus_file.write(line)
 
