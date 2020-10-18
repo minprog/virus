@@ -29,8 +29,7 @@ def compiles():
     with open("virus_conv.py", "r") as converted_file, open("virus.py", "w") as virus_file:
         for line in converted_file:
             # remove all lines after the plot boundary, because it exhausts matplotlib
-            if line.strip() == "%matplotlib inline" or line.strip() == "get_ipython().run_line_magic('matplotlib', 'inline')":
-                raise check50.Failure(line)
+            if "run_line_magic" in line or "import matplotlib.pyplot as plt" in line:
                 break
             # replace assertions with no-ops
             if line.strip().startswith("assert"):
